@@ -28,7 +28,7 @@ O aplicativo terá as seguintes funcionalidades:
 
 O projeto seguirá uma estrutura básica:
 
-´
+```
 projeto-fastapi-react/
 │
 ├── backend/ # Código fonte do backend
@@ -44,4 +44,4 @@ projeto-fastapi-react/
 │ └── ...
 │
 └── README.md # Documentação do projeto
-´
+```
