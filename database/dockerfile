@@ -1,7 +1,0 @@
-FROM alpine:latest
-
-WORKDIR /db
-
-COPY moviexp.db .
-
-CMD ["tail", "-f", "/dev/null"]
