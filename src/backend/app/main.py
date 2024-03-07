@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
-from app.controllers.controller import get_users, get_games, get_game_by_id
+import hashlib
+from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from app.controllers.controller import oauth2_scheme, get_games, get_game_by_id, get_current_user, revoke_token, login, create_user, get_user_by_username, get_access_token, is_token_revoked
 
 app = FastAPI()
 
@@ -14,22 +16,6 @@ def games():
 @app.get('/game/{game_id}')
 def game(game_id: int):
     return get_game_by_id(game_id)
-
-@app.get('/profile')
-def profile():
-    return {"message": "User profile page"}
-
-@app.post('/login')
-def login():
-    return {"message": "Login successful"}
-
-@app.post('/register')
-def register():
-    return {"message": "Registration successful"}
-
-@app.get('/logout')
-def logout():
-    return {"message": "Logout successful"}
 
 @app.exception_handler(404)
 async def page_not_found(request, exc):
