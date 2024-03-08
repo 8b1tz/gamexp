@@ -1,7 +1,5 @@
-import hashlib
-from fastapi import FastAPI, HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from app.controllers.controller import oauth2_scheme, get_games, get_game_by_id, get_current_user, revoke_token, login, create_user, get_user_by_username, get_access_token, is_token_revoked
+from fastapi import FastAPI, HTTPException
+from app.controllers.controller import get_games, get_game_by_id, get_games_by_category, get_games_by_platform, get_games_by_publisher, get_games_by_developer, get_categories, get_developers, get_plataforms, get_publishers, get_game_by_release_year
 
 app = FastAPI()
 
@@ -9,13 +7,61 @@ app = FastAPI()
 def home():
     return {"message": "Welcome to the homepage"}
 
-@app.get('/games')
+
+@app.get('/api/games')
 def games():
     return get_games()
 
-@app.get('/game/{game_id}')
+
+@app.get('/api/game/{game_id}')
 def game(game_id: int):
     return get_game_by_id(game_id)
+
+
+@app.get('/api/games/category/{category}')
+def games_by_category(category: str):
+    return get_games_by_category(category)
+
+
+@app.get('/api/games/platform/{platform}')
+def games_by_platform(platform: str):
+    return get_games_by_platform(platform)
+
+
+@app.get('/api/games/publisher/{publisher}')
+def games_by_publisher(publisher: str):
+    return get_games_by_publisher(publisher)
+
+
+@app.get('/api/games/developer/{developer}')
+def games_by_developer(developer: str):
+    return get_games_by_developer(developer)
+
+
+@app.get('/api/games/{year}')
+def game_by_release_year(year: str):
+    return get_game_by_release_year(year)
+
+
+@app.get('/api/categories')
+def categories():
+    return get_categories()
+
+
+@app.get('/api/publishers')
+def publishers():
+    return get_publishers()
+
+
+@app.get('/api/plataforms')
+def plataforms():
+    return get_plataforms()
+
+
+@app.get('/api/developers')
+def developers():
+    return get_developers()
+
 
 @app.exception_handler(404)
 async def page_not_found(request, exc):

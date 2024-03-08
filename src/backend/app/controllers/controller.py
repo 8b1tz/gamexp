@@ -1,41 +1,85 @@
 import requests
-import sqlite3
-import hashlib
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi import Depends
-import jwt
+from datetime import datetime
+
+
+def create_no_duplicate_sequence(key):
+    all_games = get_games()
+    return {game[key] for game in all_games}
+
+
+def make_api_request(endpoint: str, params: dict = None):
+    url = f"https://www.freetogame.com/api/{endpoint}"
+    response = requests.get(url, params=params)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        return f'Erro na API: {response.status_code}'
+
 
 def get_games():
-    url = "https://www.freetogame.com/api/games"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        games = response.json()
-        return games
-    else:
-        return 'Erro na API'
+    return make_api_request('games')
+
 
 def get_game_by_id(game_id: int):
-    url = f"https://www.freetogame.com/api/game?id={game_id}"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        game = response.json()
-        return game
+    return make_api_request(f'game?id={game_id}')
+
+
+def get_games_by_category(category: str):
+    return make_api_request('games', params={'  ': category})
+
+
+def get_games_by_platform(platform: str):
+    return make_api_request('games', params={'platform': platform})
+
+
+def get_games_by_publisher(publisher: str):
+    return make_api_request('games', params={'publisher': publisher})
+
+
+def get_games_by_developer(developer: str):
+    return make_api_request('games', params={'developer': developer})
+
+
+def get_game_by_release_year(year_str):
+    all_games = get_games()
+    try:
+        year = int(year_str)
+    except ValueError:
+        print("Ano inválido. Deve ser um número inteiro.")
+        return None
+
+    filtered_games = []
+    for game in all_games:
+        try:
+            game_date = datetime.strptime(game.get('release_date'), '%Y-%m-%d').date()
+            if game_date.year == year:
+                filtered_games.append(game)
+        except ValueError:
+            print(f"Ignorando data inválida: {game.get('release_date')}")
+
+    if filtered_games:
+        return filtered_games
     else:
-        return 'Erro na API'
-        
-def get_game_by_category(category: str):
-    pass
+        return None
 
-def get_game_by_plataform(plataform: str):
-    pass
 
-def get_game_by_publish():
-    pass
+def get_categories():
+    categories = create_no_duplicate_sequence('genre')
+    return categories
 
-def get_game_by_developer():
-    pass
 
-def get_categorys():
-    pass
+def get_publishers():
+    publishers = create_no_duplicate_sequence('publisher')
+    return publishers
+
+
+def get_plataforms():
+    publishers = create_no_duplicate_sequence('platform')
+    return publishers
+
+
+def get_developers():
+    publishers = create_no_duplicate_sequence('developer')
+    return publishers

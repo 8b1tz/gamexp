@@ -1,6 +1,3 @@
 fastapi
 uvicorn[standard]
 requests
-pyjwt
-python-multipart
-pysqlite3
