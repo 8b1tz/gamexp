@@ -10,7 +10,6 @@ def create_no_duplicate_sequence(key):
 def make_api_request(endpoint: str, params: dict = None):
     url = f"https://www.freetogame.com/api/{endpoint}"
     response = requests.get(url, params=params)
-    
     if response.status_code == 200:
         data = response.json()
         return data
