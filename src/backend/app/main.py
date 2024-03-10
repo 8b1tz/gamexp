@@ -1,12 +1,8 @@
-import requests
-from app.controllers.controller import (get_categories, get_developers,
-                                        get_game_by_id,
-                                        get_game_by_release_year, get_games,
-                                        get_games_by_category,
-                                        get_games_by_developer,
-                                        get_games_by_platform,
-                                        get_games_by_publisher, get_plataforms,
-                                        get_publishers)
+from typing import Dict, List
+
+from app.controllers.controller import (filter_games, get_categories,
+                                        get_developers, get_games,
+                                        get_platforms, get_publishers)
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -18,37 +14,14 @@ def home():
 
 
 @app.get('/api/game')
-def game_tag(
+def game(
     year: int = None,
     developer: str = None,
     publisher: str = None,
     category: str = None,
     platform: str = None
-):
-    params = {}
-    
-    if year:
-        params['year'] = year
-    if developer:
-        params['developer'] = developer
-    if publisher:
-        params['publisher'] = publisher
-    if category:
-        params['category'] = category
-    if platform:
-        params['platform'] = platform
-
-    return make_api_request('games', params=params)
-
-
-def make_api_request(endpoint: str, params: dict = None):
-    url = f"https://www.freetogame.com/api/{endpoint}"
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        return data
-    else:
-        return f'Erro na API: {response.status_code}'
+) -> List[Dict]:
+    return filter_games(year, developer, publisher, category, platform)
 
 
 @app.get('/api/games')
@@ -66,9 +39,9 @@ def publishers():
     return get_publishers()
 
 
-@app.get('/api/plataforms')
-def plataforms():
-    return get_plataforms()
+@app.get('/api/platforms')
+def platforms():
+    return get_platforms()
 
 
 @app.get('/api/developers')
