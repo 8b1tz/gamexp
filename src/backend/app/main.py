@@ -1,46 +1,59 @@
-from fastapi import FastAPI, HTTPException
-from app.controllers.controller import get_games, get_game_by_id, get_games_by_category, get_games_by_platform, get_games_by_publisher, get_games_by_developer, get_categories, get_developers, get_plataforms, get_publishers, get_game_by_release_year
+import requests
+from app.controllers.controller import (get_categories, get_developers,
+                                        get_game_by_id,
+                                        get_game_by_release_year, get_games,
+                                        get_games_by_category,
+                                        get_games_by_developer,
+                                        get_games_by_platform,
+                                        get_games_by_publisher, get_plataforms,
+                                        get_publishers)
+from fastapi import FastAPI
 
 app = FastAPI()
+
 
 @app.get('/')
 def home():
     return {"message": "Welcome to the homepage"}
 
 
+@app.get('/api/game')
+def game_tag(
+    year: int = None,
+    developer: str = None,
+    publisher: str = None,
+    category: str = None,
+    platform: str = None
+):
+    params = {}
+    
+    if year:
+        params['year'] = year
+    if developer:
+        params['developer'] = developer
+    if publisher:
+        params['publisher'] = publisher
+    if category:
+        params['category'] = category
+    if platform:
+        params['platform'] = platform
+
+    return make_api_request('games', params=params)
+
+
+def make_api_request(endpoint: str, params: dict = None):
+    url = f"https://www.freetogame.com/api/{endpoint}"
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        return f'Erro na API: {response.status_code}'
+
+
 @app.get('/api/games')
 def games():
     return get_games()
-
-
-@app.get('/api/game/{game_id}')
-def game(game_id: int):
-    return get_game_by_id(game_id)
-
-
-@app.get('/api/games/category/{category}')
-def games_by_category(category: str):
-    return get_games_by_category(category)
-
-
-@app.get('/api/games/platform/{platform}')
-def games_by_platform(platform: str):
-    return get_games_by_platform(platform)
-
-
-@app.get('/api/games/publisher/{publisher}')
-def games_by_publisher(publisher: str):
-    return get_games_by_publisher(publisher)
-
-
-@app.get('/api/games/developer/{developer}')
-def games_by_developer(developer: str):
-    return get_games_by_developer(developer)
-
-
-@app.get('/api/games/{year}')
-def game_by_release_year(year: str):
-    return get_game_by_release_year(year)
 
 
 @app.get('/api/categories')

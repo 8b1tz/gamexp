@@ -1,20 +1,24 @@
-import requests
 from datetime import datetime
 
-
-def create_no_duplicate_sequence(key):
-    all_games = get_games()
-    return {game[key] for game in all_games}
+import requests
 
 
 def make_api_request(endpoint: str, params: dict = None):
     url = f"https://www.freetogame.com/api/{endpoint}"
-    response = requests.get(url, params=params)
+    if params:
+        url += '?' + '&'.join([f"{key}={value}" for key, value in params.items()])
+    
+    response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
         return data
     else:
         return f'Erro na API: {response.status_code}'
+
+
+def create_no_duplicate_sequence(key):
+    all_games = get_games()
+    return {game[key] for game in all_games}
 
 
 def get_games():
@@ -26,7 +30,7 @@ def get_game_by_id(game_id: int):
 
 
 def get_games_by_category(category: str):
-    return make_api_request('games', params={'  ': category})
+    return make_api_request('games', params={'category': category})
 
 
 def get_games_by_platform(platform: str):
@@ -74,11 +78,11 @@ def get_publishers():
     return publishers
 
 
-def get_plataforms():
-    publishers = create_no_duplicate_sequence('platform')
-    return publishers
+def get_platforms():
+    platforms = create_no_duplicate_sequence('platform')
+    return platforms
 
 
 def get_developers():
-    publishers = create_no_duplicate_sequence('developer')
-    return publishers
+    developers = create_no_duplicate_sequence('developer')
+    return developers
