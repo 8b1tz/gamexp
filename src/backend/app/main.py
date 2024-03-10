@@ -1,8 +1,9 @@
 from typing import Dict, List
 
 from app.controllers.controller import (filter_games, get_categories,
-                                        get_developers, get_games,
-                                        get_platforms, get_publishers)
+                                        get_developers, get_game_by_id,
+                                        get_games, get_platforms,
+                                        get_publishers)
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -23,6 +24,11 @@ def game(
 ) -> List[Dict]:
     return filter_games(year, developer, publisher, category, platform)
 
+
+@app.get('/api/game/{id}')
+def game_by_id(id):
+    return get_game_by_id(id)
+    
 
 @app.get('/api/games')
 def games():
