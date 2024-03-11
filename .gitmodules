@@ -1,2 +1,3 @@
-[submodule "src/frontend"]
+[submodule "front-end"]
+	path = front-end
 	url = https://github.com/AnaLinsDev/gamexp_nuxt
