@@ -104,7 +104,7 @@ def filter_games(year: int = None, developer: str = None, publisher: str = None,
         if (year is None or release_date.year == year) and \
            (developer is None or game.get('developer') == developer) and \
            (publisher is None or game.get('publisher') == publisher) and \
-           (category is None or game.get('category') == category) and \
+           (category is None or game.get('genre') == category) and \
            (platform is None or game.get('platform') == platform):
             filtered_games.append(game)
 
