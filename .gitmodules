@@ -1,6 +1,2 @@
-[submodule "src/frontend/gamexp_nuxt"]
-	path = src/frontend/gamexp_nuxt
-	url = https://github.com/AnaLinsDev/gamexp_nuxt
-[submodule "src/gamexp_nuxt"]
-	path = src/gamexp_nuxt
+[submodule "src/frontend"]
 	url = https://github.com/AnaLinsDev/gamexp_nuxt
