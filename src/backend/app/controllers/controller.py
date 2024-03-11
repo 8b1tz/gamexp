@@ -27,7 +27,7 @@ def get_game_by_id(game_id: int):
 
 
 def get_games_by_category(category: str):
-    return make_api_request('games', params={'category': category})
+    return make_api_request('games', params={'genre': category})
 
 
 def get_games_by_platform(platform: str):
