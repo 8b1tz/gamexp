@@ -4,6 +4,8 @@ from app.controllers.controller import (filter_games, get_categories,
                                         get_developers, get_game_by_id,
                                         get_games, get_platforms,
                                         get_publishers)
+from app.utils.statistics_game import (games_per_genre, games_per_publishers,
+                                       year_with_most_releases)
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -28,7 +30,7 @@ def game(
 @app.get('/api/game/{id}')
 def game_by_id(id):
     return get_game_by_id(id)
-    
+
 
 @app.get('/api/games')
 def games():
@@ -53,6 +55,14 @@ def platforms():
 @app.get('/api/developers')
 def developers():
     return get_developers()
+
+
+@app.get('/api/statistics')
+def statistics():
+    return {'games_per_genre': games_per_genre(),
+            'games_per_publishers': games_per_publishers(),
+            'year_with_most_releases': year_with_most_releases()
+            }
 
 
 @app.exception_handler(404)

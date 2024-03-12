@@ -1,15 +1,17 @@
 from datetime import datetime
 from typing import Dict, List
 
-import requests
+from requests import get
 
 
 def make_api_request(endpoint: str, params: dict = None):
     url = f"https://www.freetogame.com/api/{endpoint}"
     if params:
-        url += '?' + '&'.join([f"{key}={value}" for key, value in params.items()])
+        url += '?' + '&'.join(
+            [f"{key}={value}" for key, value in params.items()]
+        )
 
-    response = requests.get(url)
+    response = get(url)
     if response.status_code == 200:
         data = response.json()
         return data
@@ -53,7 +55,9 @@ def get_games_by_release_year(year_str):
     filtered_games = []
     for game in all_games:
         try:
-            game_date = datetime.strptime(game.get('release_date'), '%Y-%m-%d').date()
+            game_date = datetime.strptime(
+                game.get('release_date'), '%Y-%m-%d'
+            ).date()
             if game_date.year == year:
                 filtered_games.append(game)
         except ValueError:
@@ -89,14 +93,22 @@ def get_developers():
     return developers
 
 
-def filter_games(year: int = None, developer: str = None, publisher: str = None, category: str = None, platform: str = None) -> List[Dict]:
+def filter_games(
+        year: int = None,
+        developer: str = None,
+        publisher: str = None,
+        category: str = None,
+        platform: str = None
+        ) -> List[Dict]:
     games = get_games()
     filtered_games = []
 
     for game in games:
         release_date_str = game.get('release_date')
         try:
-            release_date = datetime.strptime(release_date_str, '%Y-%m-%d').date()
+            release_date = datetime.strptime(
+                release_date_str, '%Y-%m-%d'
+            ).date()
         except ValueError:
             print(f"Ignorando data inválida: {release_date_str}")
             continue
